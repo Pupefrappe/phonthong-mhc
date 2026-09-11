@@ -712,7 +712,7 @@ function loadStorage() {
     students     = JSON.parse(localStorage.getItem(LS_KEY) || '[]');
     config       = JSON.parse(localStorage.getItem(LS_CFG) || '{}');
     outreachList = JSON.parse(localStorage.getItem(LS_OUTREACH) || '[]');
-    if (!config.sheetsUrl)         config.sheetsUrl = '';
+    if (!config.sheetsUrl)         config.sheetsUrl = 'https://script.google.com/macros/s/AKfycbwKVh5pSA-Hmd0u-5SuqjLP1egN-hswVUetNw0Fxb6xAQZSdHLXL7o9KTcNKHNlMTH4/exec';
     if (!Array.isArray(config.schools)) config.schools = [];
   } catch(e) {
     students = []; config = { sheetsUrl: '', schools: [] }; outreachList = [];
