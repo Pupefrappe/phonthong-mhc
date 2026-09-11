@@ -1,0 +1,955 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Phonthong Mental Health Care</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+:root{
+  --g1:#1B5E38;--g2:#2D7A52;--gp:#E3F2EB;--gt:#F2FAF5;
+  --warn:#C0392B;--wp:#FDF0EE;--gold:#C8960C;--goldp:#FFF8E6;
+  --c1:#7A3B0E;--c1p:#F4E8DF;--c2:#5230A0;--c2p:#EEE6F7;
+  --c3:#0E5A7A;--c3p:#E6F3F9;--c4:#1A6B2A;--c4p:#E3F5E8;
+  --c5:#8B4513;--c5p:#FBF0E3;--c6:#7A1740;--c6p:#F9E6EF;
+  --tx:#142B1E;--tx2:#4E6557;--mu:#8AA494;
+  --sf:#fff;--sf2:#F5FAF7;--bd:#C8DDD3;--bdl:#E3EDE8;
+  --sh:0 1px 4px rgba(27,94,56,.1),0 4px 16px rgba(27,94,56,.06);
+  --r:10px;--rs:6px;
+}
+@media(prefers-color-scheme:dark){:root{
+  --g1:#5BC48C;--g2:#3FAE72;--gp:#1A3328;--gt:#111E17;
+  --warn:#E87061;--wp:#2A1410;
+  --c1:#D4956A;--c1p:#2A1A0E;--c2:#9B7FE0;--c2p:#1E1430;
+  --c3:#6BAEC8;--c3p:#0E1E28;--c4:#68B87A;--c4p:#0E2018;
+  --c5:#C8956A;--c5p:#2A1A0A;--c6:#C96A95;--c6p:#281020;
+  --tx:#E2F0E9;--tx2:#93B5A0;--mu:#567265;
+  --sf:#182520;--sf2:#111E17;--bd:#2A4035;--bdl:#1E3028;
+  --sh:0 1px 4px rgba(0,0,0,.3),0 4px 16px rgba(0,0,0,.2);
+}}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Sarabun',sans-serif;font-size:16px;line-height:1.6;color:var(--tx);background:var(--sf2);min-height:100vh}
+
+/* Header */
+.hdr{background:var(--g1);position:sticky;top:0;z-index:100;box-shadow:0 2px 12px rgba(0,0,0,.2)}
+.hdr-in{display:flex;align-items:center;gap:12px;padding:12px 20px;max-width:980px;margin:0 auto}
+.hdr-ico{width:34px;height:34px;background:rgba(255,255,255,.15);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0}
+.hdr-t{flex:1}
+.hdr-t h1{font-size:15px;font-weight:700;color:#fff;line-height:1.3}
+.hdr-t p{font-size:11px;color:rgba(255,255,255,.6);margin-top:1px}
+.hdr-cfg{background:none;border:none;color:rgba(255,255,255,.7);font-size:20px;cursor:pointer;padding:4px;border-radius:6px;transition:background .15s}
+.hdr-cfg:hover{background:rgba(255,255,255,.15)}
+.hdr-sync{background:none;border:none;color:rgba(255,255,255,.7);font-size:18px;cursor:pointer;padding:4px;border-radius:6px;transition:background .15s;margin-right:2px}
+.hdr-sync:hover{background:rgba(255,255,255,.15)}
+
+/* Nav */
+.nav{background:var(--sf);border-bottom:1px solid var(--bdl);padding:0 20px}
+.nav-in{max-width:980px;margin:0 auto;display:flex}
+.ntab{padding:11px 18px;font-size:14px;font-weight:600;color:var(--mu);border:none;background:none;cursor:pointer;border-bottom:3px solid transparent;transition:color .15s,border-color .15s;display:flex;align-items:center;gap:7px;font-family:inherit;flex-shrink:0}
+.ntab.active{color:var(--g1);border-color:var(--g1)}
+.ntab:hover:not(.active){color:var(--tx2);border-color:var(--bdl)}
+
+/* Main */
+.main{max-width:980px;margin:0 auto;padding:20px 16px 48px}
+
+/* Page */
+.page{display:none}.page.active{display:block}
+
+/* Card */
+.card{background:var(--sf);border:1px solid var(--bdl);border-radius:var(--r);padding:20px;margin-bottom:16px;box-shadow:var(--sh)}
+.sec-title{font-size:13px;font-weight:700;color:var(--g1);text-transform:uppercase;letter-spacing:.8px;margin-bottom:14px;padding-bottom:8px;border-bottom:1px solid var(--bdl)}
+
+/* Form */
+.frow{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
+.frow-3{grid-template-columns:1fr 1fr 1fr}
+.frow-1{grid-template-columns:1fr}
+@media(max-width:560px){.frow,.frow-3{grid-template-columns:1fr}}
+.fg{display:flex;flex-direction:column;gap:4px}
+.fg label{font-size:13px;font-weight:600;color:var(--tx2)}
+.fg label .req{color:var(--warn);margin-left:2px}
+input[type=text],input[type=tel],select,textarea{
+  width:100%;border:1.5px solid var(--bd);border-radius:var(--rs);padding:9px 12px;
+  font-family:inherit;font-size:15px;color:var(--tx);background:var(--sf);
+  transition:border-color .15s,box-shadow .15s;outline:none;
+}
+input:focus,select:focus,textarea:focus{border-color:var(--g2);box-shadow:0 0 0 3px rgba(45,122,82,.12)}
+input[type=text]:disabled,input[type=tel]:disabled{background:var(--sf2);color:var(--mu)}
+select{cursor:pointer}
+
+/* Checkbox items */
+.chk-group{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+@media(max-width:560px){.chk-group{grid-template-columns:1fr}}
+.chk-item{display:flex;align-items:flex-start;gap:8px;padding:8px 10px;border:1.5px solid var(--bdl);border-radius:var(--rs);cursor:pointer;transition:border-color .15s,background .15s;user-select:none}
+.chk-item:hover{border-color:var(--g2);background:var(--gp)}
+.chk-item input[type=checkbox]{width:16px;height:16px;accent-color:var(--g1);flex-shrink:0;margin-top:2px;cursor:pointer}
+.chk-item span{font-size:14px;color:var(--tx);line-height:1.4}
+.chk-item.warn-item{border-color:var(--bd)}
+.chk-item.warn-item:hover{border-color:var(--warn);background:var(--wp)}
+.chk-item.checked-warn{border-color:var(--warn)!important;background:var(--wp)!important}
+.chk-item.checked{border-color:var(--g2)!important;background:var(--gp)!important}
+
+/* Buttons */
+.btn{display:inline-flex;align-items:center;gap:7px;padding:10px 20px;border-radius:var(--rs);font-family:inherit;font-size:15px;font-weight:600;cursor:pointer;border:none;transition:all .15s;white-space:nowrap}
+.btn-primary{background:var(--g1);color:#fff}.btn-primary:hover{background:var(--g2)}
+.btn-outline{background:transparent;color:var(--g1);border:1.5px solid var(--g1)}.btn-outline:hover{background:var(--gp)}
+.btn-warn{background:var(--warn);color:#fff}.btn-warn:hover{opacity:.88}
+.btn-sm{padding:6px 14px;font-size:13px}
+.btn:disabled{opacity:.55;cursor:not-allowed}
+.btn-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+
+/* Toast */
+#toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--g1);color:#fff;padding:12px 22px;border-radius:30px;font-size:14px;font-weight:600;box-shadow:0 4px 20px rgba(0,0,0,.25);z-index:9999;transition:opacity .3s,transform .3s;opacity:0;pointer-events:none;max-width:calc(100vw - 40px);text-align:center}
+#toast.show{opacity:1}
+#toast.err{background:var(--warn)}
+
+/* Settings modal */
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:200;display:flex;align-items:center;justify-content:center;padding:20px}
+.overlay[hidden]{display:none!important}
+.modal{background:var(--sf);border-radius:var(--r);padding:24px;max-width:520px;width:100%;box-shadow:0 8px 40px rgba(0,0,0,.25)}
+.modal h2{font-size:17px;font-weight:700;color:var(--tx);margin-bottom:6px}
+.modal-sub{font-size:13px;color:var(--tx2);margin-bottom:18px}
+.modal-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+
+/* Stats */
+.stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px}
+@media(max-width:560px){.stats-grid{grid-template-columns:1fr 1fr}}
+.stat-card{background:var(--sf);border:1px solid var(--bdl);border-radius:var(--r);padding:16px;text-align:center;box-shadow:var(--sh)}
+.stat-num{font-size:28px;font-weight:700;line-height:1.1;margin-bottom:2px}
+.stat-label{font-size:12px;color:var(--tx2);font-weight:500}
+.stat-sub{font-size:11px;color:var(--mu);margin-top:1px}
+
+/* Chart containers */
+.charts-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:620px){.charts-grid{grid-template-columns:1fr}}
+.chart-wrap{background:var(--sf);border:1px solid var(--bdl);border-radius:var(--r);padding:18px;box-shadow:var(--sh)}
+.chart-title{font-size:13px;font-weight:700;color:var(--tx2);margin-bottom:14px}
+.chart-canvas-wrap{position:relative;height:200px}
+
+/* Student list */
+.stu-list{display:flex;flex-direction:column;gap:8px}
+.stu-item{background:var(--sf);border:1px solid var(--bdl);border-radius:var(--r);padding:14px 16px;box-shadow:var(--sh);display:flex;align-items:flex-start;gap:12px}
+.stu-item.has-risk{border-left:4px solid var(--warn)}
+.stu-item.no-risk{border-left:4px solid var(--g2)}
+.stu-num{width:30px;height:30px;border-radius:50%;background:var(--gp);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:var(--g1);flex-shrink:0;margin-top:1px}
+.stu-body{flex:1;min-width:0}
+.stu-name{font-weight:700;font-size:15px;color:var(--tx)}
+.stu-meta{font-size:12px;color:var(--tx2);margin-top:1px}
+.stu-badges{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px}
+.badge{font-size:11px;font-weight:600;padding:2px 8px;border-radius:20px;white-space:nowrap}
+.badge-risk{background:var(--wp);color:var(--warn)}
+.badge-ok{background:var(--gp);color:var(--g1)}
+.badge-warn{background:var(--wp);color:var(--warn)}
+.stu-actions{display:flex;flex-direction:column;gap:4px;flex-shrink:0}
+.icon-btn{background:none;border:none;cursor:pointer;font-size:16px;padding:4px;border-radius:4px;opacity:.6;transition:opacity .15s}
+.icon-btn:hover{opacity:1}
+
+/* Sync status dot */
+.sync-dot{width:8px;height:8px;border-radius:50%;display:inline-block;flex-shrink:0}
+.sync-dot.ok{background:#22c55e}
+.sync-dot.pending{background:var(--gold)}
+.sync-dot.fail{background:var(--warn)}
+
+/* Filter bar */
+.filter-bar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px;align-items:center}
+.filter-bar select,.filter-bar input{flex:1;min-width:120px;max-width:240px}
+.filter-count{font-size:13px;color:var(--mu);white-space:nowrap;align-self:center}
+
+/* Empty state */
+.empty{text-align:center;padding:48px 20px;color:var(--mu)}
+.empty-ico{font-size:40px;margin-bottom:12px}
+.empty h3{font-size:16px;font-weight:600;color:var(--tx2);margin-bottom:6px}
+.empty p{font-size:14px}
+
+/* Alert */
+.alert{padding:12px 14px;border-radius:var(--rs);font-size:14px;margin-bottom:14px;border-left:4px solid}
+.alert-warn{background:var(--wp);color:var(--warn);border-color:var(--warn)}
+.alert-info{background:var(--gp);color:var(--g1);border-color:var(--g1)}
+
+/* Progress bar for sync */
+.sync-bar-wrap{margin-top:12px}
+.sync-bar{height:4px;border-radius:2px;background:var(--bdl);overflow:hidden;margin-top:4px}
+.sync-bar-fill{height:100%;background:var(--g2);border-radius:2px;transition:width .3s}
+
+/* Unsync badge */
+.unsync-badge{display:inline-flex;align-items:center;gap:4px;background:var(--goldp);color:var(--gold);font-size:11px;font-weight:700;padding:2px 8px;border-radius:20px}
+
+/* Checkbox list label */
+.group-label{font-size:12px;font-weight:700;color:var(--g1);margin-bottom:8px;margin-top:14px;text-transform:uppercase;letter-spacing:.5px}
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<header class="hdr">
+  <div class="hdr-in">
+    <div class="hdr-ico">🧠</div>
+    <div class="hdr-t">
+      <h1>Phonthong Mental Health Care</h1>
+      <p>คัดกรองสุขภาพจิตนักเรียน อำเภอโพนทอง ปีงบประมาณ 2569</p>
+    </div>
+    <button class="hdr-sync" id="retry-sync-btn" title="ส่งข้อมูลที่ค้างอยู่" hidden>🔄</button>
+    <button class="hdr-cfg" id="open-cfg" title="ตั้งค่า">⚙️</button>
+  </div>
+</header>
+
+<!-- Nav tabs -->
+<nav class="nav">
+  <div class="nav-in">
+    <button class="ntab active" data-tab="record">📝 บันทึก</button>
+    <button class="ntab" data-tab="list">📋 รายชื่อ</button>
+    <button class="ntab" data-tab="dash">📊 สรุปผล</button>
+  </div>
+</nav>
+
+<!-- Main content -->
+<main class="main">
+
+<!-- ═══════════ PAGE: บันทึก ═══════════ -->
+<div class="page active" id="page-record">
+
+  <!-- Alert: URL not configured -->
+  <div class="alert alert-warn" id="no-url-alert" hidden>
+    ⚠️ ยังไม่ได้ตั้งค่า Google Sheets URL — กดปุ่ม ⚙️ มุมขวาบนเพื่อตั้งค่าก่อนบันทึก
+  </div>
+
+  <!-- Form -->
+  <form id="record-form">
+
+    <!-- Section: ข้อมูลห้องเรียน -->
+    <div class="card">
+      <div class="sec-title">📍 ข้อมูลห้องเรียน</div>
+      <div class="frow">
+        <div class="fg">
+          <label>โรงเรียน<span class="req">*</span></label>
+          <select id="f-school" required>
+            <option value="">— เลือกโรงเรียน —</option>
+          </select>
+        </div>
+        <div class="fg">
+          <label>ตำบล<span class="req">*</span></label>
+          <input type="text" id="f-tambon" placeholder="เช่น โพนทอง" required>
+        </div>
+      </div>
+      <div class="frow frow-3">
+        <div class="fg">
+          <label>ชั้นเรียน<span class="req">*</span></label>
+          <select id="f-grade" required>
+            <option value="">— ชั้น —</option>
+            <option>อนุบาล 1</option><option>อนุบาล 2</option><option>อนุบาล 3</option>
+            <option>ป.1</option><option>ป.2</option><option>ป.3</option>
+            <option>ป.4</option><option>ป.5</option><option>ป.6</option>
+            <option>ม.1</option><option>ม.2</option><option>ม.3</option>
+            <option>ม.4</option><option>ม.5</option><option>ม.6</option>
+          </select>
+        </div>
+        <div class="fg">
+          <label>นักเรียนในห้องทั้งหมด</label>
+          <input type="text" id="f-total" placeholder="จำนวน" inputmode="numeric">
+        </div>
+        <div class="fg" style="justify-content:flex-end">
+          <label>&nbsp;</label>
+          <button type="button" class="btn btn-outline btn-sm" id="copy-prev-btn">📋 คัดลอกจากรายการก่อน</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Section: ข้อมูลนักเรียน -->
+    <div class="card">
+      <div class="sec-title">👤 ข้อมูลนักเรียน</div>
+      <div class="frow">
+        <div class="fg">
+          <label>ชื่อ<span class="req">*</span></label>
+          <input type="text" id="f-name" placeholder="ชื่อ" required>
+        </div>
+        <div class="fg">
+          <label>นามสกุล<span class="req">*</span></label>
+          <input type="text" id="f-surname" placeholder="นามสกุล" required>
+        </div>
+      </div>
+      <div class="frow">
+        <div class="fg">
+          <label>เลขบัตรประชาชน 13 หลัก</label>
+          <input type="text" id="f-id" placeholder="0000000000000" maxlength="13" inputmode="numeric">
+        </div>
+        <div class="fg" style="flex-direction:row;align-items:flex-end;gap:8px">
+          <div class="fg" style="flex:1">
+            <label>ชื่อครูผู้รายงาน</label>
+            <input type="text" id="f-teacher" placeholder="ชื่อ-นามสกุล">
+          </div>
+          <div class="fg" style="flex:0 0 auto;width:140px">
+            <label>เบอร์โทร</label>
+            <input type="tel" id="f-phone" placeholder="08X-XXX-XXXX">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Section: OBEC Care -->
+    <div class="card">
+      <div class="sec-title" style="color:var(--c1)">🔍 OBEC Care SDQ</div>
+      <p class="group-label">ด้านอารมณ์และพฤติกรรม</p>
+      <div class="chk-group">
+        <label class="chk-item"><input type="checkbox" id="obec1"><span>มีอาการด้านอารมณ์ (เครียด วิตก ซึมเศร้า)</span></label>
+        <label class="chk-item"><input type="checkbox" id="obec2"><span>มีปัญหาด้านพฤติกรรม (โกหก ขโมย ก้าวร้าว)</span></label>
+        <label class="chk-item"><input type="checkbox" id="obec3"><span>มีพฤติกรรมอยู่ไม่นิ่ง วอกแวก</span></label>
+        <label class="chk-item"><input type="checkbox" id="obec4"><span>มีปัญหาสัมพันธภาพกับเพื่อน</span></label>
+        <label class="chk-item"><input type="checkbox" id="obec5"><span>มีปัญหาด้านทักษะสังคม</span></label>
+      </div>
+    </div>
+
+    <!-- Section: LD -->
+    <div class="card">
+      <div class="sec-title" style="color:var(--c2)">📚 บกพร่องการเรียนรู้ (LD)</div>
+      <div class="chk-group">
+        <label class="chk-item"><input type="checkbox" id="ld1"><span>อ่านหนังสือไม่ออก / อ่านได้ช้า</span></label>
+        <label class="chk-item"><input type="checkbox" id="ld2"><span>เขียนหนังสือไม่ได้ / เขียนผิดบ่อย</span></label>
+        <label class="chk-item"><input type="checkbox" id="ld3"><span>คำนวณไม่ได้ / ไม่เข้าใจตัวเลข</span></label>
+      </div>
+    </div>
+
+    <!-- Section: ADHD -->
+    <div class="card">
+      <div class="sec-title" style="color:var(--c3)">⚡ สมาธิสั้น (ADHD)</div>
+      <div class="chk-group">
+        <label class="chk-item"><input type="checkbox" id="adhd1"><span>ขาดสมาธิ วอกแวก ไม่จดจ่อ</span></label>
+        <label class="chk-item"><input type="checkbox" id="adhd2"><span>อยู่ไม่นิ่ง ซุกซน ไม่หยุด</span></label>
+        <label class="chk-item"><input type="checkbox" id="adhd3"><span>หุนหันพลันแล่น ไม่อดทนรอ</span></label>
+      </div>
+    </div>
+
+    <!-- Section: Depression -->
+    <div class="card">
+      <div class="sec-title" style="color:var(--c4)">😔 ซึมเศร้า</div>
+      <div class="chk-group">
+        <label class="chk-item"><input type="checkbox" id="dep1"><span>เศร้า หดหู่ ร้องไห้บ่อย</span></label>
+        <label class="chk-item"><input type="checkbox" id="dep2"><span>ไม่อยากเล่น ขาดความสนใจสิ่งรอบข้าง</span></label>
+        <label class="chk-item warn-item" id="dep3-item"><input type="checkbox" id="dep3"><span>🚨 มีความคิดทำร้ายตัวเอง</span></label>
+      </div>
+    </div>
+
+    <!-- Section: Anxiety -->
+    <div class="card">
+      <div class="sec-title" style="color:var(--c5)">😰 วิตกกังวล</div>
+      <div class="chk-group">
+        <label class="chk-item"><input type="checkbox" id="anx1"><span>กลัว วิตก ไม่มีสาเหตุชัดเจน</span></label>
+        <label class="chk-item"><input type="checkbox" id="anx2"><span>นอนไม่หลับ ฝันร้ายบ่อย</span></label>
+        <label class="chk-item"><input type="checkbox" id="anx3"><span>ไม่อยากไปโรงเรียน</span></label>
+        <label class="chk-item"><input type="checkbox" id="anx4"><span>หลีกเลี่ยงสังคม แยกตัว</span></label>
+      </div>
+    </div>
+
+    <!-- Section: อื่นๆ -->
+    <div class="card">
+      <div class="sec-title" style="color:var(--c6)">🔴 ปัญหาอื่นๆ</div>
+      <div class="chk-group">
+        <label class="chk-item"><input type="checkbox" id="oth1"><span>ดื้อ ก้าวร้าว ต่อต้านผู้ใหญ่</span></label>
+        <label class="chk-item"><input type="checkbox" id="oth2"><span>เป็นเหยื่อหรือผู้กระทำ Bullying</span></label>
+        <label class="chk-item"><input type="checkbox" id="oth3"><span>อาการทางจิตเวชอื่น (ระบุด้านล่าง)</span></label>
+      </div>
+      <div class="fg" style="margin-top:10px" id="oth-text-wrap" hidden>
+        <label>ระบุอาการอื่นๆ</label>
+        <input type="text" id="f-oth-text" placeholder="ระบุรายละเอียด">
+      </div>
+    </div>
+
+    <!-- Submit -->
+    <div class="btn-row">
+      <button type="submit" class="btn btn-primary" id="submit-btn">
+        💾 บันทึกและส่ง Google Sheets
+      </button>
+      <button type="button" class="btn btn-outline" id="clear-btn">🗑️ ล้างฟอร์ม</button>
+    </div>
+
+  </form>
+</div>
+
+<!-- ═══════════ PAGE: รายชื่อ ═══════════ -->
+<div class="page" id="page-list">
+  <div class="filter-bar">
+    <input type="text" id="search-input" placeholder="🔍 ค้นหาชื่อนักเรียน..." style="max-width:240px">
+    <select id="filter-school" style="max-width:200px">
+      <option value="">— ทุกโรงเรียน —</option>
+    </select>
+    <select id="filter-risk" style="max-width:170px">
+      <option value="">— ทุกกลุ่ม —</option>
+      <option value="risk">มีความเสี่ยง</option>
+      <option value="ok">ปกติ</option>
+    </select>
+    <span class="filter-count" id="list-count"></span>
+    <button class="btn btn-outline btn-sm" id="resync-all-btn">🔄 ส่งซ้ำทั้งหมด</button>
+  </div>
+  <div id="stu-list-wrap"></div>
+</div>
+
+<!-- ═══════════ PAGE: Dashboard ═══════════ -->
+<div class="page" id="page-dash">
+  <div class="stats-grid" id="stats-grid"></div>
+  <div class="charts-grid">
+    <div class="chart-wrap">
+      <div class="chart-title">📊 จำนวนแยกตามกลุ่มอาการ</div>
+      <div class="chart-canvas-wrap"><canvas id="chart-group"></canvas></div>
+    </div>
+    <div class="chart-wrap">
+      <div class="chart-title">🏫 จำนวนแยกตามโรงเรียน (กลุ่มเสี่ยง)</div>
+      <div class="chart-canvas-wrap"><canvas id="chart-school"></canvas></div>
+    </div>
+    <div class="chart-wrap">
+      <div class="chart-title">🎓 จำนวนแยกตามชั้นเรียน (กลุ่มเสี่ยง)</div>
+      <div class="chart-canvas-wrap"><canvas id="chart-grade"></canvas></div>
+    </div>
+    <div class="chart-wrap">
+      <div class="chart-title">⚠️ อาการที่พบบ่อย</div>
+      <div class="chart-canvas-wrap"><canvas id="chart-sym"></canvas></div>
+    </div>
+  </div>
+</div>
+
+</main>
+
+<!-- Settings Modal -->
+<div class="overlay" id="cfg-modal" hidden>
+  <div class="modal">
+    <h2>⚙️ ตั้งค่าระบบ</h2>
+    <p class="modal-sub">ตั้งค่า Apps Script URL สำหรับส่งข้อมูลไป Google Sheets</p>
+
+    <div class="fg" style="margin-bottom:14px">
+      <label>Google Apps Script Web App URL</label>
+      <input type="text" id="cfg-url" placeholder="https://script.google.com/macros/s/.../exec">
+    </div>
+
+    <div class="fg" style="margin-bottom:14px">
+      <label>เพิ่มโรงเรียน (กด Enter เพื่อเพิ่ม)</label>
+      <input type="text" id="cfg-school-input" placeholder="ชื่อโรงเรียน" id="cfg-school-add">
+      <div id="school-list" style="margin-top:8px;display:flex;flex-wrap:wrap;gap:6px"></div>
+    </div>
+
+    <div class="modal-actions">
+      <button class="btn btn-primary" id="save-cfg-btn">💾 บันทึกการตั้งค่า</button>
+      <button class="btn btn-outline" id="close-cfg-btn">ยกเลิก</button>
+      <button class="btn btn-warn btn-sm" id="clear-all-btn" style="margin-left:auto">🗑️ ลบข้อมูลทั้งหมด</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div id="toast"></div>
+
+<script>
+// ══════════════════════════════════════
+// STATE & STORAGE
+// ══════════════════════════════════════
+const LS_KEY = 'mhc_v1_students';
+const LS_CFG = 'mhc_v1_config';
+
+let students = [];
+let config = { sheetsUrl: '', schools: [] };
+
+function loadStorage() {
+  try {
+    students = JSON.parse(localStorage.getItem(LS_KEY) || '[]');
+    config = JSON.parse(localStorage.getItem(LS_CFG) || '{}');
+    if (!config.sheetsUrl) config.sheetsUrl = '';
+    if (!Array.isArray(config.schools)) config.schools = [
+      'โรงเรียนโพนทองวิทยายน','โรงเรียนอนุบาลโพนทอง',
+      'โรงเรียนบ้านท่าลาดวารีวิทยา','โรงเรียนบ้านขมิ้น'
+    ];
+  } catch(e) {
+    students = []; config = { sheetsUrl: '', schools: [] };
+  }
+}
+
+function saveStudents() {
+  try { localStorage.setItem(LS_KEY, JSON.stringify(students)); } catch(e) {}
+}
+
+function saveConfig() {
+  try { localStorage.setItem(LS_CFG, JSON.stringify(config)); } catch(e) {}
+}
+
+// ══════════════════════════════════════
+// TOAST
+// ══════════════════════════════════════
+let toastTimer;
+function toast(msg, isErr) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.className = 'show' + (isErr ? ' err' : '');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => { el.className = ''; }, 3200);
+}
+
+// ══════════════════════════════════════
+// TABS
+// ══════════════════════════════════════
+document.querySelectorAll('.ntab').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.ntab').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('page-' + btn.dataset.tab).classList.add('active');
+    if (btn.dataset.tab === 'list') renderList();
+    if (btn.dataset.tab === 'dash') renderDash();
+  });
+});
+
+// ══════════════════════════════════════
+// SETTINGS MODAL
+// ══════════════════════════════════════
+function openSettings() {
+  document.getElementById('cfg-url').value = config.sheetsUrl;
+  renderSchoolTags();
+  document.getElementById('cfg-modal').hidden = false;
+}
+document.getElementById('open-cfg').addEventListener('click', openSettings);
+document.getElementById('close-cfg-btn').addEventListener('click', () => {
+  document.getElementById('cfg-modal').hidden = true;
+});
+document.getElementById('save-cfg-btn').addEventListener('click', () => {
+  config.sheetsUrl = document.getElementById('cfg-url').value.trim();
+  saveConfig();
+  document.getElementById('cfg-modal').hidden = true;
+  updateNoUrlAlert();
+  rebuildSchoolSelect();
+  toast('✅ บันทึกการตั้งค่าแล้ว');
+});
+document.getElementById('clear-all-btn').addEventListener('click', () => {
+  if (confirm('⚠️ ลบข้อมูลนักเรียนทั้งหมดออกจากอุปกรณ์นี้?\n(ข้อมูลใน Google Sheets ยังคงอยู่)')) {
+    students = [];
+    saveStudents();
+    document.getElementById('cfg-modal').hidden = true;
+    toast('ลบข้อมูลแล้ว');
+    renderList();
+    renderDash();
+  }
+});
+
+// School tag management
+let editSchools = [];
+function renderSchoolTags() {
+  editSchools = [...config.schools];
+  const wrap = document.getElementById('school-list');
+  wrap.innerHTML = editSchools.map((s, i) =>
+    `<span style="display:inline-flex;align-items:center;gap:4px;background:var(--gp);border:1px solid var(--bd);border-radius:20px;padding:3px 10px;font-size:13px">
+      ${s}
+      <button onclick="removeSchool(${i})" style="background:none;border:none;cursor:pointer;color:var(--mu);font-size:14px;line-height:1;padding:0 2px">×</button>
+    </span>`
+  ).join('');
+}
+window.removeSchool = (i) => {
+  editSchools.splice(i, 1);
+  config.schools = editSchools;
+  renderSchoolTags();
+};
+document.getElementById('cfg-school-input').addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') {
+    e.preventDefault();
+    const val = e.target.value.trim();
+    if (val && !editSchools.includes(val)) {
+      editSchools.push(val);
+      config.schools = editSchools;
+      renderSchoolTags();
+    }
+    e.target.value = '';
+  }
+});
+
+function rebuildSchoolSelect() {
+  const sel = document.getElementById('f-school');
+  const cur = sel.value;
+  sel.innerHTML = '<option value="">— เลือกโรงเรียน —</option>' +
+    config.schools.map(s => `<option${s===cur?' selected':''}>${s}</option>`).join('');
+  const fsel = document.getElementById('filter-school');
+  if (fsel) {
+    fsel.innerHTML = '<option value="">— ทุกโรงเรียน —</option>' +
+      config.schools.map(s => `<option>${s}</option>`).join('');
+  }
+}
+
+function updateNoUrlAlert() {
+  document.getElementById('no-url-alert').hidden = !!config.sheetsUrl;
+}
+
+// ══════════════════════════════════════
+// SEND TO GOOGLE SHEETS
+// ══════════════════════════════════════
+function buildRow(s, idx) {
+  const yn = x => x ? 'ใช่' : '';
+  const grp = riskLabel(s);
+  return [
+    idx + 1,
+    s.school || '', s.tambon || '', s.grade || '', s.totalInClass || '',
+    s.studentName || '', s.studentSurname || '', s.studentId || '',
+    s.teacherName || '', s.teacherPhone || '',
+    grp, s.dep3 ? '⚑ มีความคิดทำร้ายตัวเอง' : '',
+    yn(s.obec1), yn(s.obec2), yn(s.obec3), yn(s.obec4), yn(s.obec5),
+    yn(s.ld1), yn(s.ld2), yn(s.ld3),
+    yn(s.adhd1), yn(s.adhd2), yn(s.adhd3),
+    yn(s.dep1), yn(s.dep2), yn(s.dep3),
+    yn(s.anx1), yn(s.anx2), yn(s.anx3), yn(s.anx4),
+    yn(s.oth1), yn(s.oth2), yn(s.oth3), s.othText || '',
+    s.date ? new Date(s.date).toLocaleDateString('th-TH') : ''
+  ];
+}
+
+async function sendOneRow(s, idx) {
+  if (!config.sheetsUrl) return false;
+  const payload = JSON.stringify({ rows: [buildRow(s, idx)], mode: 'append' });
+  const b64 = btoa(unescape(encodeURIComponent(payload)));
+  const url = config.sheetsUrl + '?d=' + encodeURIComponent(b64);
+  try {
+    // GitHub Pages has no CSP — fetch works directly
+    await fetch(url, { method: 'GET', mode: 'no-cors' });
+    return true;
+  } catch(e) {
+    return false;
+  }
+}
+
+async function resyncAll() {
+  if (!config.sheetsUrl) { toast('กรุณาตั้งค่า Google Sheets URL ก่อน', true); return; }
+  const btn = document.getElementById('resync-all-btn');
+  btn.disabled = true; btn.textContent = '⏳ กำลังส่ง...';
+  // Send full dataset as a batch replace
+  const allRows = students.map((s, i) => buildRow(s, i));
+  const payload = JSON.stringify({ rows: allRows, mode: 'full' });
+  const b64 = btoa(unescape(encodeURIComponent(payload)));
+  const url = config.sheetsUrl + '?d=' + encodeURIComponent(b64);
+  try {
+    await fetch(url, { method: 'GET', mode: 'no-cors' });
+    // Mark all as synced
+    students.forEach(s => { s.synced = true; });
+    saveStudents();
+    toast('✅ ส่งข้อมูล ' + students.length + ' รายการไป Google Sheets แล้ว');
+    renderList();
+    updateRetrySyncBtn();
+  } catch(e) {
+    toast('เกิดข้อผิดพลาดในการส่ง', true);
+  }
+  btn.disabled = false; btn.textContent = '🔄 ส่งซ้ำทั้งหมด';
+}
+
+function updateRetrySyncBtn() {
+  const hasUnsynced = students.some(s => !s.synced);
+  document.getElementById('retry-sync-btn').hidden = !hasUnsynced;
+}
+
+// ══════════════════════════════════════
+// FORM SUBMIT
+// ══════════════════════════════════════
+document.getElementById('oth3').addEventListener('change', function() {
+  document.getElementById('oth-text-wrap').hidden = !this.checked;
+});
+
+document.getElementById('dep3').addEventListener('change', function() {
+  document.getElementById('dep3-item').className = 'chk-item warn-item' + (this.checked ? ' checked-warn' : '');
+});
+
+// Checkbox visual state
+document.querySelectorAll('.chk-item input[type=checkbox]').forEach(cb => {
+  cb.addEventListener('change', function() {
+    const item = this.closest('.chk-item');
+    if (!item.classList.contains('warn-item')) {
+      item.classList.toggle('checked', this.checked);
+    }
+  });
+});
+
+// Copy previous classroom info
+document.getElementById('copy-prev-btn').addEventListener('click', () => {
+  const last = students[students.length - 1];
+  if (!last) { toast('ยังไม่มีข้อมูลก่อนหน้า', true); return; }
+  document.getElementById('f-school').value = last.school || '';
+  document.getElementById('f-tambon').value = last.tambon || '';
+  document.getElementById('f-grade').value = last.grade || '';
+  document.getElementById('f-total').value = last.totalInClass || '';
+  document.getElementById('f-teacher').value = last.teacherName || '';
+  document.getElementById('f-phone').value = last.teacherPhone || '';
+  toast('📋 คัดลอกข้อมูลห้องเรียนแล้ว');
+});
+
+// Clear form
+document.getElementById('clear-btn').addEventListener('click', () => {
+  if (confirm('ล้างข้อมูลในฟอร์มทั้งหมด?')) {
+    document.getElementById('record-form').reset();
+    document.getElementById('oth-text-wrap').hidden = true;
+    document.getElementById('dep3-item').className = 'chk-item warn-item';
+    document.querySelectorAll('.chk-item').forEach(el => el.classList.remove('checked','checked-warn'));
+  }
+});
+
+// SUBMIT
+document.getElementById('record-form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const btn = document.getElementById('submit-btn');
+  btn.disabled = true; btn.textContent = '⏳ กำลังบันทึก...';
+
+  const student = {
+    id: Date.now().toString(),
+    date: new Date().toISOString(),
+    school: document.getElementById('f-school').value,
+    tambon: document.getElementById('f-tambon').value.trim(),
+    grade: document.getElementById('f-grade').value,
+    totalInClass: document.getElementById('f-total').value.trim(),
+    studentName: document.getElementById('f-name').value.trim(),
+    studentSurname: document.getElementById('f-surname').value.trim(),
+    studentId: document.getElementById('f-id').value.trim(),
+    teacherName: document.getElementById('f-teacher').value.trim(),
+    teacherPhone: document.getElementById('f-phone').value.trim(),
+    obec1: document.getElementById('obec1').checked,
+    obec2: document.getElementById('obec2').checked,
+    obec3: document.getElementById('obec3').checked,
+    obec4: document.getElementById('obec4').checked,
+    obec5: document.getElementById('obec5').checked,
+    ld1: document.getElementById('ld1').checked,
+    ld2: document.getElementById('ld2').checked,
+    ld3: document.getElementById('ld3').checked,
+    adhd1: document.getElementById('adhd1').checked,
+    adhd2: document.getElementById('adhd2').checked,
+    adhd3: document.getElementById('adhd3').checked,
+    dep1: document.getElementById('dep1').checked,
+    dep2: document.getElementById('dep2').checked,
+    dep3: document.getElementById('dep3').checked,
+    anx1: document.getElementById('anx1').checked,
+    anx2: document.getElementById('anx2').checked,
+    anx3: document.getElementById('anx3').checked,
+    anx4: document.getElementById('anx4').checked,
+    oth1: document.getElementById('oth1').checked,
+    oth2: document.getElementById('oth2').checked,
+    oth3: document.getElementById('oth3').checked,
+    othText: document.getElementById('f-oth-text').value.trim(),
+    synced: false
+  };
+
+  students.push(student);
+  saveStudents();
+
+  // Send to Google Sheets
+  if (config.sheetsUrl) {
+    btn.textContent = '📡 กำลังส่ง Google Sheets...';
+    const ok = await sendOneRow(student, students.length - 1);
+    if (ok) {
+      student.synced = true;
+      saveStudents();
+    }
+  }
+
+  btn.disabled = false;
+  btn.textContent = '💾 บันทึกและส่ง Google Sheets';
+  updateRetrySyncBtn();
+
+  // Alert self-harm
+  if (student.dep3) {
+    toast('⚠️ บันทึกแล้ว — มีแจ้งเตือนความคิดทำร้ายตัวเอง กรุณาดำเนินการตามแนวทาง');
+  } else if (config.sheetsUrl) {
+    toast('✅ บันทึกและส่ง Google Sheets แล้ว — ' + student.studentName + ' ' + student.studentSurname);
+  } else {
+    toast('✅ บันทึกแล้ว (ยังไม่ได้ตั้งค่า URL)');
+  }
+
+  // Keep classroom info, clear student info only
+  const keepFields = ['f-school','f-tambon','f-grade','f-total','f-teacher','f-phone'];
+  const keepVals = {};
+  keepFields.forEach(f => { keepVals[f] = document.getElementById(f).value; });
+  document.getElementById('record-form').reset();
+  keepFields.forEach(f => { document.getElementById(f).value = keepVals[f]; });
+  document.getElementById('oth-text-wrap').hidden = true;
+  document.getElementById('dep3-item').className = 'chk-item warn-item';
+  document.querySelectorAll('.chk-item').forEach(el => el.classList.remove('checked','checked-warn'));
+});
+
+// Retry sync (header button)
+document.getElementById('retry-sync-btn').addEventListener('click', resyncAll);
+document.getElementById('resync-all-btn').addEventListener('click', resyncAll);
+
+// ══════════════════════════════════════
+// RISK LOGIC
+// ══════════════════════════════════════
+function riskLabel(s) {
+  if (s.dep3) return 'แจ้งเตือน: ทำร้ายตัวเอง';
+  if (s.dep1 || s.dep2) return 'ซึมเศร้า';
+  if (s.anx1 || s.anx2 || s.anx3 || s.anx4) return 'วิตกกังวล';
+  if (s.adhd1 || s.adhd2 || s.adhd3) return 'สมาธิสั้น';
+  if (s.ld1 || s.ld2 || s.ld3) return 'บกพร่องการเรียนรู้';
+  if (s.obec1 || s.obec2 || s.obec3 || s.obec4 || s.obec5) return 'OBEC ผิดปกติ';
+  if (s.oth1 || s.oth2 || s.oth3) return 'ปัญหาอื่นๆ';
+  return '';
+}
+
+function hasRisk(s) { return !!riskLabel(s); }
+
+// ══════════════════════════════════════
+// LIST PAGE
+// ══════════════════════════════════════
+function renderList() {
+  const search = (document.getElementById('search-input').value || '').toLowerCase();
+  const filterSchool = document.getElementById('filter-school').value;
+  const filterRisk = document.getElementById('filter-risk').value;
+
+  let list = students.filter((s, i) => {
+    const name = (s.studentName + ' ' + s.studentSurname).toLowerCase();
+    if (search && !name.includes(search)) return false;
+    if (filterSchool && s.school !== filterSchool) return false;
+    if (filterRisk === 'risk' && !hasRisk(s)) return false;
+    if (filterRisk === 'ok' && hasRisk(s)) return false;
+    return true;
+  });
+
+  document.getElementById('list-count').textContent = `${list.length} / ${students.length} รายการ`;
+  const wrap = document.getElementById('stu-list-wrap');
+
+  if (!students.length) {
+    wrap.innerHTML = `<div class="empty"><div class="empty-ico">📋</div><h3>ยังไม่มีข้อมูล</h3><p>กดแท็บ "บันทึก" เพื่อเริ่มบันทึกข้อมูลนักเรียน</p></div>`;
+    return;
+  }
+  if (!list.length) {
+    wrap.innerHTML = `<div class="empty"><div class="empty-ico">🔍</div><h3>ไม่พบรายการ</h3><p>ลองเปลี่ยนเงื่อนไขการค้นหา</p></div>`;
+    return;
+  }
+
+  // Show newest first
+  const reversed = [...list].reverse();
+  wrap.innerHTML = `<div class="stu-list">${reversed.map((s, ri) => {
+    const origIdx = students.indexOf(s);
+    const risk = riskLabel(s);
+    const badges = [];
+    if (s.dep3) badges.push(`<span class="badge badge-warn">⚠️ ความคิดทำร้ายตัวเอง</span>`);
+    if (risk && !s.dep3) badges.push(`<span class="badge badge-risk">${risk}</span>`);
+    if (!risk) badges.push(`<span class="badge badge-ok">ปกติ</span>`);
+    if (!s.synced) badges.push(`<span class="unsync-badge">⏳ รอส่ง</span>`);
+    return `<div class="stu-item ${hasRisk(s)?'has-risk':'no-risk'}">
+      <div class="stu-num">${origIdx + 1}</div>
+      <div class="stu-body">
+        <div class="stu-name">${s.studentName} ${s.studentSurname}</div>
+        <div class="stu-meta">🏫 ${s.school||'-'} · ${s.grade||'-'} · ${s.teacherName||'-'} · ${s.date?new Date(s.date).toLocaleDateString('th-TH'):'-'}</div>
+        <div class="stu-badges">${badges.join('')}</div>
+      </div>
+      <div class="stu-actions">
+        <button class="icon-btn" onclick="deleteStudent('${s.id}')" title="ลบ">🗑️</button>
+        <button class="icon-btn" onclick="retrySyncOne('${s.id}',${origIdx})" title="ส่งซ้ำ">📤</button>
+      </div>
+    </div>`;
+  }).join('')}</div>`;
+}
+
+window.deleteStudent = (id) => {
+  if (!confirm('ลบรายการนักเรียนนี้ออกจากอุปกรณ์?')) return;
+  students = students.filter(s => s.id !== id);
+  saveStudents();
+  renderList();
+  updateRetrySyncBtn();
+};
+
+window.retrySyncOne = async (id, idx) => {
+  const s = students.find(x => x.id === id);
+  if (!s || !config.sheetsUrl) { toast('กรุณาตั้งค่า URL ก่อน', true); return; }
+  toast('📡 กำลังส่ง...');
+  const ok = await sendOneRow(s, idx);
+  if (ok) { s.synced = true; saveStudents(); toast('✅ ส่งแล้ว'); renderList(); updateRetrySyncBtn(); }
+  else toast('ส่งไม่ได้ กรุณาลองใหม่', true);
+};
+
+// Search/filter events
+['search-input','filter-school','filter-risk'].forEach(id => {
+  document.getElementById(id)?.addEventListener('input', renderList);
+});
+
+// ══════════════════════════════════════
+// DASHBOARD
+// ══════════════════════════════════════
+let charts = {};
+function renderDash() {
+  const total = students.length;
+  const risk = students.filter(hasRisk);
+  const selfharm = students.filter(s => s.dep3);
+  const synced = students.filter(s => s.synced);
+
+  document.getElementById('stats-grid').innerHTML = `
+    <div class="stat-card"><div class="stat-num" style="color:var(--g1)">${total}</div><div class="stat-label">นักเรียนทั้งหมด</div></div>
+    <div class="stat-card"><div class="stat-num" style="color:var(--warn)">${risk.length}</div><div class="stat-label">กลุ่มเสี่ยง</div><div class="stat-sub">${total?Math.round(risk.length/total*100):0}%</div></div>
+    <div class="stat-card"><div class="stat-num" style="color:var(--c6)">${selfharm.length}</div><div class="stat-label">แจ้งเตือน: ทำร้ายตัวเอง</div></div>
+    <div class="stat-card"><div class="stat-num" style="color:var(--c1)">${students.filter(s=>s.obec1||s.obec2||s.obec3||s.obec4||s.obec5).length}</div><div class="stat-label">OBEC ผิดปกติ</div></div>
+    <div class="stat-card"><div class="stat-num" style="color:var(--c2)">${students.filter(s=>s.ld1||s.ld2||s.ld3).length}</div><div class="stat-label">บกพร่องการเรียนรู้</div></div>
+    <div class="stat-card"><div class="stat-num" style="color:var(--c3)">${students.filter(s=>s.adhd1||s.adhd2||s.adhd3).length}</div><div class="stat-label">สมาธิสั้น</div></div>
+  `;
+
+  // Group chart
+  const groupData = {
+    'OBEC': students.filter(s=>s.obec1||s.obec2||s.obec3||s.obec4||s.obec5).length,
+    'LD': students.filter(s=>s.ld1||s.ld2||s.ld3).length,
+    'ADHD': students.filter(s=>s.adhd1||s.adhd2||s.adhd3).length,
+    'ซึมเศร้า': students.filter(s=>s.dep1||s.dep2||s.dep3).length,
+    'วิตกกังวล': students.filter(s=>s.anx1||s.anx2||s.anx3||s.anx4).length,
+    'อื่นๆ': students.filter(s=>s.oth1||s.oth2||s.oth3).length,
+  };
+  mkChart('chart-group', 'bar', Object.keys(groupData), Object.values(groupData),
+    ['#7A3B0E','#5230A0','#0E5A7A','#1A6B2A','#8B4513','#7A1740']);
+
+  // School chart (risk only)
+  const schools = [...new Set(students.map(s=>s.school).filter(Boolean))];
+  mkChart('chart-school', 'bar',
+    schools,
+    schools.map(sc => students.filter(s=>s.school===sc && hasRisk(s)).length),
+    Array(schools.length).fill('#1B5E38'));
+
+  // Grade chart
+  const grades = [...new Set(students.map(s=>s.grade).filter(Boolean))].sort();
+  mkChart('chart-grade', 'bar',
+    grades,
+    grades.map(g => students.filter(s=>s.grade===g && hasRisk(s)).length),
+    Array(grades.length).fill('#2D7A52'));
+
+  // Symptom frequency
+  const syms = [
+    ['อารมณ์(OBEC)',s=>s.obec1],['พฤติกรรม(OBEC)',s=>s.obec2],['ไม่อยู่นิ่ง(OBEC)',s=>s.obec3],
+    ['อ่านไม่ออก',s=>s.ld1],['เขียนไม่ได้',s=>s.ld2],
+    ['วอกแวก',s=>s.adhd1],['อยู่ไม่นิ่ง',s=>s.adhd2],
+    ['เศร้า',s=>s.dep1],['ทำร้ายตัวเอง',s=>s.dep3],
+    ['กลัว',s=>s.anx1],['ไม่อยากมาโรงเรียน',s=>s.anx3],
+  ].map(([label, fn]) => ({ label, count: students.filter(fn).length }))
+   .filter(x=>x.count>0)
+   .sort((a,b)=>b.count-a.count)
+   .slice(0, 8);
+
+  mkChart('chart-sym', 'bar',
+    syms.map(x=>x.label),
+    syms.map(x=>x.count),
+    syms.map((_,i)=>`hsl(${140+i*20},50%,35%)`));
+}
+
+function mkChart(id, type, labels, data, colors) {
+  const ctx = document.getElementById(id).getContext('2d');
+  if (charts[id]) charts[id].destroy();
+  charts[id] = new Chart(ctx, {
+    type,
+    data: { labels, datasets: [{ data, backgroundColor: colors, borderRadius: 4, borderWidth: 0 }] },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: type==='bar' ? {
+        x: { grid: { display: false }, ticks: { font: { family: 'Sarabun', size: 11 } } },
+        y: { beginAtZero: true, ticks: { stepSize: 1, font: { size: 11 } }, grid: { color: 'rgba(0,0,0,.05)' } }
+      } : {}
+    }
+  });
+}
+
+// ══════════════════════════════════════
+// INIT
+// ══════════════════════════════════════
+function init() {
+  loadStorage();
+  rebuildSchoolSelect();
+  updateNoUrlAlert();
+  updateRetrySyncBtn();
+  if (!config.sheetsUrl) {
+    // First run — open settings automatically
+    setTimeout(openSettings, 600);
+  }
+}
+
+init();
+</script>
+</body>
+</html>
