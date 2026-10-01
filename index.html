@@ -766,7 +766,7 @@ document.getElementById('save-cfg-btn').addEventListener('click', () => {
   rebuildSchoolSelect();
   toast('✅ บันทึกการตั้งค่าแล้ว');
 });
-document.getElementById('clear-all-btn').addEventListener('click', () => {
+document.getElementById('clear-all-btn')?.addEventListener('click', () => {
   if (confirm('⚠️ ลบข้อมูลนักเรียนทั้งหมดออกจากอุปกรณ์นี้?\n(ข้อมูลใน Google Sheets ยังคงอยู่)')) {
     students = []; saveStudents();
     document.getElementById('cfg-modal').hidden = true;
