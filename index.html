@@ -550,7 +550,6 @@ textarea{resize:vertical;min-height:72px}
     <div class="modal-actions">
       <button class="btn btn-primary" id="save-cfg-btn">💾 บันทึกการตั้งค่า</button>
       <button class="btn btn-outline" id="close-cfg-btn">ยกเลิก</button>
-      <button class="btn btn-warn btn-sm" id="clear-all-btn" style="margin-left:auto">🗑️ ลบข้อมูลทั้งหมด</button>
     </div>
   </div>
 </div>
@@ -840,6 +839,13 @@ function buildRow(s, idx) {
   ];
 }
 
+function maskName(name) {
+  if (!name) return '-';
+  const chars = [...name];
+  if (chars.length <= 1) return chars[0] + '*';
+  return chars[0] + '*'.repeat(chars.length - 1);
+}
+
 async function sendOneRow(s, idx) {
   if (!config.sheetsUrl) return false;
   const payload = JSON.stringify({ rows: [buildRow(s, idx)], mode: 'append' });
@@ -852,16 +858,20 @@ async function resyncAll() {
   if (!config.sheetsUrl) { toast('กรุณาตั้งค่า Google Sheets URL ก่อน', true); return; }
   const btn = document.getElementById('resync-all-btn');
   btn.disabled = true; btn.textContent = '⏳ กำลังส่ง...';
-  const allRows = students.map((s,i) => buildRow(s,i));
-  const payload = JSON.stringify({ rows: allRows, mode: 'full' });
-  const b64 = btoa(unescape(encodeURIComponent(payload)));
-  try {
-    await fetch(config.sheetsUrl + '?d=' + encodeURIComponent(b64), { method:'GET', mode:'no-cors' });
-    students.forEach(s => { s.synced = true; });
-    saveStudents();
-    toast('✅ ส่งข้อมูล ' + students.length + ' รายการไป Google Sheets แล้ว');
-    renderList(); updateRetrySyncBtn();
-  } catch(e) { toast('เกิดข้อผิดพลาดในการส่ง', true); }
+  // ส่งทีละแถวแบบ append เท่านั้น ไม่ลบข้อมูลคนอื่นใน Sheet
+  let ok = 0;
+  for (let i = 0; i < students.length; i++) {
+    const s = students[i];
+    const payload = JSON.stringify({ rows: [buildRow(s, i)], mode: 'append' });
+    const b64 = btoa(unescape(encodeURIComponent(payload)));
+    try {
+      await fetch(config.sheetsUrl + '?d=' + encodeURIComponent(b64), { method:'GET', mode:'no-cors' });
+      s.synced = true; ok++;
+    } catch(e) {}
+  }
+  saveStudents();
+  toast('✅ ส่งข้อมูล ' + ok + ' รายการไป Google Sheets แล้ว');
+  renderList(); updateRetrySyncBtn();
   btn.disabled = false; btn.textContent = '🔄 ส่งซ้ำทั้งหมด';
 }
 
@@ -1075,13 +1085,12 @@ function renderList() {
     return `<div class="stu-item ${hasRisk(s)?'has-risk':'no-risk'}">
       <div class="stu-num">${origIdx+1}</div>
       <div class="stu-body">
-        <div class="stu-name">${s.studentName} ${s.studentSurname}</div>
+        <div class="stu-name">${maskName(s.studentName)} ${maskName(s.studentSurname)}</div>
         <div class="stu-meta">🏫 ${s.school||'-'} · ${s.grade||'-'} · ${s.teacherName||'-'} · ${s.date?new Date(s.date).toLocaleDateString('th-TH'):'-'}</div>
         <div class="stu-badges">${badges.join('')}</div>
       </div>
       <div class="stu-actions">
         <button class="icon-btn" title="อัปเดตผลการประเมิน" onclick="openAssessModal('${s.id}')">📝</button>
-        <button class="icon-btn" onclick="deleteStudent('${s.id}')" title="ลบ">🗑️</button>
         <button class="icon-btn" onclick="retrySyncOne('${s.id}',${origIdx})" title="ส่งซ้ำ">📤</button>
       </div>
     </div>`;
